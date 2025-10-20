@@ -9,13 +9,38 @@ def ServicoCadastrarPessoa():
     lista_opcoes = MostrarOpcoesDeVoltarAoMenu(1)
     opcao_esperada = int(input("Selecione o número da opção: "))
     opcao_selecionada = ValidaOpcaoSelecionadoMenu(1, lista_opcoes, opcao_esperada)
-    
+
     match opcao_selecionada:
         case 1:
             ServicoCadastrarPessoa()
         case 2:
             print(f"\nVoltando ao menu de opções...\n")
             InteracaoMenu()
+
+def ServicoListarPessoas():
+    print("\n---- LISTA DE PESSOAS CADASTRADAS ----\n")
+    ListarPessoas()
+    print(f"\nVoltando ao menu de opções...\n")
+
+def ServicoEditarPessoa():
+    print("\n---------- EDITANDO PESSOA ----------\n")
+    print("Lista de pessoas cadastradas: \n")
+    ListarPessoas()
+    id_selecionado = int(input("Digite o ID da pessoa a ser editada: "))
+    valor_atual = ExibirPessoa(id_selecionado)
+
+    novo_nome = str(input("Digite o novo nome: "))
+    novo_idade = str(input("Digite a nova idade: "))
+    pessoa_editada = EditarPessoa(id_selecionado, novo_nome, novo_idade)
+
+    print("ANTES\n")
+    print(f"ID: {valor_atual[0]}, Nome: {valor_atual[1]}, Idade: {valor_atual[2]}\n")
+
+    print("DEPOIS\n")
+    print(f"ID: {pessoa_editada[0]}, Nome: {pessoa_editada[1]}, Idade: {pessoa_editada[2]}")
+
+    print(f"\Edição realizada com sucesso! Retornando ao menu de opções...\n")
+    InteracaoMenu()
 
 def CadastrarPessoas(nome_pessoa: str, idade_pessoa: int):
     id_pessoa = len(lista_pessoas) + 1
@@ -28,14 +53,25 @@ def ListarPessoas():
             print(f"ID: {c[0]}, Nome: {c[1]}, Idade: {c[2]}")
     else:
         print("Não há pessoas cadastradas.")
-    
-def EditarPessoa(id_pessoa: int):
-    print("Lista de pessoas: ")
+
+def ExibirPessoa(id_pessoa):
+    indice_pessoa = id_pessoa - 1
+    pessoa_selecionada = lista_pessoas[indice_pessoa]
+    print(f"ID: {pessoa_selecionada[0]}, Nome: {pessoa_selecionada[1]}, Idade: {pessoa_selecionada[2]}")
+    return pessoa_selecionada
+ 
+def EditarPessoa(id_pessoa: int, nome: str, idade: int):
+    indice_pessoa = id_pessoa - 1
+    lista_pessoas[indice_pessoa][1] = nome
+    lista_pessoas[indice_pessoa][2] = idade
+    pessoa_selecionada = lista_pessoas[indice_pessoa]
+    return pessoa_selecionada
 
 def InteracaoMenu():
     print("\n---------- MENU DE OPÇÕES ----------\n")
     print("1 - Cadastrar pessoa")
     print("2 - Listas pessoas cadastradas")
+    print("3 - Editar pessoa")
     print(f"0 - Sair do sistema\n")
     opcao_selecionada = int(input("Digite uma opção do menu: "))
     return opcao_selecionada
@@ -63,19 +99,16 @@ def IniciarSistema():
         match opcao_menu:
             case 0:
                 print("\nSaindo do sistema...\n")
+                break
             case 1:
                 ServicoCadastrarPessoa()
             case 2:
-                print("\n-- LISTA DE PESSOAS CADASTRADAS --\n")
-                ListarPessoas()
-                print(f"\nVoltando ao menu de opções...\n")
-
+                ServicoListarPessoas()
             case 3:
-                print("\n---------- EDITANDO PESSOA ----------\n")
-                ListarPessoas()
-
+                ServicoEditarPessoa()
             case _:
                 print("Opção inválida. Tente novamente")
 
 IniciarSistema()
+
 print("Sistema encerrado")
